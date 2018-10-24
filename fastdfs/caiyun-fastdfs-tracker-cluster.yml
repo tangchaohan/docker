@@ -1,0 +1,67 @@
+version: '3.4'
+
+services:
+  caiyun-fastdfs-tracker-1:
+    image: tangchaohan/fastdfs-tracker
+    networks:
+       hostnet: {}
+    command: tracker
+    volumes: 
+      - /etc/hosts:/etc/hosts:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /home/fastdfs/tracker:/opt/fastdfs
+    environment:  
+      LC_ALL: en_US.UTF-8
+      TZ: Asia/Shanghai
+    logging:
+      options:
+        max-size: 100m
+        max-file: 3       
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+      placement:
+        constraints: [engine.labels.host_ip==IP1]
+      replicas: 1
+      restart_policy:
+        delay: 5s
+        max_attempts: 3
+      update_config:
+        parallelism: 2
+        failure_action: rollback
+
+  caiyun-fastdfs-tracker-2:
+    image: tangchaohan/fastdfs-tracker
+    networks:
+       hostnet: {}
+    command: tracker
+    volumes: 
+      - /etc/hosts:/etc/hosts:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /home/fastdfs/tracker:/opt/fastdfs
+    environment:  
+      LC_ALL: en_US.UTF-8
+      TZ: Asia/Shanghai
+    logging:
+      options:
+        max-size: 100m
+        max-file: 3       
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+      placement:
+        constraints: [engine.labels.host_ip==IP2]
+      replicas: 1
+      restart_policy:
+        delay: 5s
+        max_attempts: 3
+      update_config:
+        parallelism: 2
+        failure_action: rollback
+
+networks:
+  hostnet:
+    external: 
+      name: host	
